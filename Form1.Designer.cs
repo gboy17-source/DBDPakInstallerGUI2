@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(dbdPakInstaller));
             this.selectPaksFolder = new System.Windows.Forms.Button();
             this.selectPakBakFile = new System.Windows.Forms.Button();
             this.EpicGames = new System.Windows.Forms.RadioButton();
@@ -51,7 +52,6 @@
             this.selectPaksFolder.TabIndex = 0;
             this.selectPaksFolder.Text = "Select Paks folder";
             this.selectPaksFolder.UseVisualStyleBackColor = false;
-            this.selectPaksFolder.UseWaitCursor = true;
             this.selectPaksFolder.Click += new System.EventHandler(this.selectPaksFolder_Click);
             // 
             // selectPakBakFile
@@ -69,7 +69,6 @@
             this.selectPakBakFile.TabIndex = 1;
             this.selectPakBakFile.Text = "Select .pak/.bak file";
             this.selectPakBakFile.UseVisualStyleBackColor = false;
-            this.selectPakBakFile.UseWaitCursor = true;
             this.selectPakBakFile.Click += new System.EventHandler(this.selectPakBakFile_Click);
             // 
             // EpicGames
@@ -86,7 +85,6 @@
             this.EpicGames.TabStop = true;
             this.EpicGames.Text = "Epic Games";
             this.EpicGames.UseVisualStyleBackColor = false;
-            this.EpicGames.UseWaitCursor = true;
             this.EpicGames.CheckedChanged += new System.EventHandler(this.EpicGames_CheckedChanged);
             // 
             // Steam
@@ -103,7 +101,6 @@
             this.Steam.TabStop = true;
             this.Steam.Text = "Steam";
             this.Steam.UseVisualStyleBackColor = false;
-            this.Steam.UseWaitCursor = true;
             this.Steam.CheckedChanged += new System.EventHandler(this.Steam_CheckedChanged);
             // 
             // EXECUTE
@@ -121,7 +118,6 @@
             this.EXECUTE.TabIndex = 4;
             this.EXECUTE.Text = "EXECUTE";
             this.EXECUTE.UseVisualStyleBackColor = false;
-            this.EXECUTE.UseWaitCursor = true;
             this.EXECUTE.Click += new System.EventHandler(this.EXECUTE_Click);
             // 
             // PakBypass
@@ -139,7 +135,6 @@
             this.PakBypass.TabIndex = 5;
             this.PakBypass.Text = "Pak Bypass";
             this.PakBypass.UseVisualStyleBackColor = false;
-            this.PakBypass.UseWaitCursor = true;
             this.PakBypass.Click += new System.EventHandler(this.PakBypass_Click);
             // 
             // dbdPakInstaller
@@ -154,10 +149,11 @@
             this.Controls.Add(this.EpicGames);
             this.Controls.Add(this.selectPakBakFile);
             this.Controls.Add(this.selectPaksFolder);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "dbdPakInstaller";
             this.Text = "Gboy\'s DBD Pak Installer";
-            this.UseWaitCursor = true;
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
