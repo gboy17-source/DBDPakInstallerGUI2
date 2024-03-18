@@ -4,11 +4,11 @@ Unfortunately, something unforeseen happened to my pc and I lost the original ve
 
 Hi, I'm a noob programmer and this is my first program release please be gentle
 
-#IMPORTANT
+# IMPORTANT
 
 Make sure you have a click the Pak bypass button before you install mods otherwise it won't work. You can download mods here https://www.nirvanacheats.com/ just go to 'Mods' to find the mods you like. Also turn off you're antivirus if it doesn't work as it's probably being flagged as malicious but it's just false positives # TURN OFF ANTI-VIRUS
 
-HOW TO USE
+# HOW TO USE
 ![Screenshot_2](https://github.com/gboy17-source/DBDPakInstallerGUI2/assets/75770900/a2cfb3ea-7482-4156-b957-19157f307a5d)
 
 
@@ -27,4 +27,4 @@ HOW TO USE
 
 7. Pak Bypass - This is the program that make the mods/
 
-#I'll be updating this program soon when I have time :)
+# I'll be updating this program soon when I have time :)
