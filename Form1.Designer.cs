@@ -35,6 +35,8 @@
             this.Steam = new System.Windows.Forms.RadioButton();
             this.EXECUTE = new System.Windows.Forms.Button();
             this.PakBypass = new System.Windows.Forms.Button();
+            this.Uninstall = new System.Windows.Forms.Button();
+            this.modsList = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // selectPaksFolder
@@ -137,12 +139,44 @@
             this.PakBypass.UseVisualStyleBackColor = false;
             this.PakBypass.Click += new System.EventHandler(this.PakBypass_Click);
             // 
+            // Uninstall
+            // 
+            this.Uninstall.BackColor = System.Drawing.Color.Transparent;
+            this.Uninstall.FlatAppearance.BorderColor = System.Drawing.Color.PowderBlue;
+            this.Uninstall.FlatAppearance.MouseDownBackColor = System.Drawing.Color.CadetBlue;
+            this.Uninstall.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkSlateGray;
+            this.Uninstall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Uninstall.Font = new System.Drawing.Font("Ink Free", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Uninstall.ForeColor = System.Drawing.Color.PowderBlue;
+            this.Uninstall.Location = new System.Drawing.Point(811, 612);
+            this.Uninstall.Name = "Uninstall";
+            this.Uninstall.Size = new System.Drawing.Size(269, 90);
+            this.Uninstall.TabIndex = 7;
+            this.Uninstall.Text = "Uninstall";
+            this.Uninstall.UseVisualStyleBackColor = false;
+            this.Uninstall.Click += new System.EventHandler(this.Uninstall_Click);
+            // 
+            // modsList
+            // 
+            this.modsList.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.modsList.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.modsList.ForeColor = System.Drawing.Color.PowderBlue;
+            this.modsList.FormattingEnabled = true;
+            this.modsList.ItemHeight = 25;
+            this.modsList.Location = new System.Drawing.Point(811, 32);
+            this.modsList.Name = "modsList";
+            this.modsList.Size = new System.Drawing.Size(269, 504);
+            this.modsList.TabIndex = 8;
+            this.modsList.SelectedIndexChanged += new System.EventHandler(this.modsList_SelectedIndexChanged);
+            // 
             // dbdPakInstaller
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::DBDPakInstallerGUI2.Properties.Resources.wwww;
             this.ClientSize = new System.Drawing.Size(1104, 740);
+            this.Controls.Add(this.modsList);
+            this.Controls.Add(this.Uninstall);
             this.Controls.Add(this.PakBypass);
             this.Controls.Add(this.EXECUTE);
             this.Controls.Add(this.Steam);
@@ -168,6 +202,8 @@
         private System.Windows.Forms.RadioButton Steam;
         private System.Windows.Forms.Button EXECUTE;
         private System.Windows.Forms.Button PakBypass;
+        private System.Windows.Forms.Button Uninstall;
+        private System.Windows.Forms.ListBox modsList;
     }
 }
 

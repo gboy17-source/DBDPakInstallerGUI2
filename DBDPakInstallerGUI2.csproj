@@ -86,5 +86,9 @@
   <ItemGroup>
     <EmbeddedResource Include="PakBypass\PakBypass.exe" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="PakBypass\README!!!.txt" />
+    <Content Include="Resources\Screenshot_6.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

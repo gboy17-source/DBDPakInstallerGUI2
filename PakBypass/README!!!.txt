@@ -1,0 +1,1 @@
+Sometimes, PakBypass.exe wont work after dbd update. you can get a separate pakbypass in this discord server https://discord.gg/YQJFdm2ewd just go to their pakbypass chat

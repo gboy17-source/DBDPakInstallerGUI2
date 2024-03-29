@@ -21,10 +21,15 @@ namespace DBDPakInstallerGUI2
         private TextBox pakFileTextBoxDisplay;
         private Logger logger;
         private string paksFolderPath;
+        private string modsListFilePath;
+        private List<string> selectedFilePaths = new List<string>();
+
+
         public dbdPakInstaller()
         {
             InitializeComponent();
 
+            LoadSelectedFilePaths();
             //Textbox field instances
             paksTextBox = new TextBox();
             pakFileTextBox = new TextBox();
@@ -45,11 +50,16 @@ namespace DBDPakInstallerGUI2
 
             // Set the paksFolderPath to the PaksFolderPath.txt file in the application directory
             paksFolderPath = Path.Combine(appDirectory, "PaksFolderPath.txt");
+            // set the modlist path to modList.txt in the app directory
+            modsListFilePath = Path.Combine(appDirectory, "modsList.txt");
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            logger.Log("Form loaded.");
+            LoadSelectedFilePaths();
+
+            //modsList.Items.Clear();
+            modsList.Items.AddRange(selectedFilePaths.Select(Path.GetFileName).ToArray());
         }
 
         private void selectPaksFolder_Click(object sender, EventArgs e)
@@ -139,8 +149,25 @@ namespace DBDPakInstallerGUI2
                     logger.Log($"PAK or BAK file selected: {chosenPakFileName}");
                     pakFileTextBox.Text = chosenPakFileName;
                     pakFileTextBoxDisplay.Text = chosenPakFileName; // Update display TextBox
+                    //selectedFilePaths.Clear(); // Clear the selected file paths list
+                    selectedFilePaths.AddRange(openFileDialog.FileNames); // Add the selected file paths to the list
+                    //modsList.Items.Clear(); // Clear the modsList
+                    modsList.Items.AddRange(openFileDialog.FileNames.Select(Path.GetFileName).ToArray()); // Add the selected file names to the modsList
 
-                    // Check wether the Paks folder is valid or nah
+                    // Write the selected file names to modsList.txt
+                    try
+                    {
+                        File.AppendAllLines(modsListFilePath, openFileDialog.FileNames.Select(Path.GetFileName));
+                        logger.Log("Selected file names saved to modsList.txt");
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Log($"Error occurred while saving selected file names to modsList.txt: {ex.Message}");
+                    }
+
+                    logger.Log($"PAK or BAK files selected: {string.Join(", ", openFileDialog.FileNames)}");
+
+                    // Check whether the Paks folder is valid
                     if (!string.IsNullOrEmpty(paksFolder) && Directory.Exists(paksFolder))
                     {
                         // Create copies of pakchunk348-EGS.sig
@@ -275,12 +302,77 @@ namespace DBDPakInstallerGUI2
             RenameCopies(paksFolder, chosenPakFileName);
             logger.Log("Operation completed successfully!");
             MessageBox.Show("Operation completed successfully! HAPPY MODDING!");
+
+
         }
 
         private void PakBypass_Click(object sender, EventArgs e)
         {
             RunPakBypassProgram();
         }
+
+        private void Uninstall_Click(object sender, EventArgs e)
+        {
+            // Read the Paks folder path from PaksFolderPath.txt
+            string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string paksFolderPathFile = Path.Combine(appDirectory, "PaksFolderPath.txt");
+            string paksFolderPath = File.Exists(paksFolderPathFile) ? File.ReadAllText(paksFolderPathFile).Trim() : "";
+
+            if (modsList.SelectedIndex != -1)
+            {
+                // Get the selected item's index
+                int selectedIndex = modsList.SelectedIndex;
+
+                // Get the corresponding file path from the selectedFilePaths list
+                string selectedFilePath = selectedFilePaths[selectedIndex];
+                string selectedFileName = Path.GetFileName(selectedFilePath);
+
+                // Remove the selected file from the Paks folder
+                string pakFilePath = Path.Combine(paksFolderPath, selectedFileName);
+                string sigFilePath = Path.Combine(paksFolderPath, $"{Path.GetFileNameWithoutExtension(selectedFileName)}.sig");
+                string kekFilePath = Path.Combine(paksFolderPath, $"{Path.GetFileNameWithoutExtension(selectedFileName)}.kek");
+
+                // Ask for confirmation before uninstalling
+                DialogResult result = MessageBox.Show($"Are you sure you want to uninstall {selectedFileName}?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    try
+                    {
+                        // Delete the PAK/BAK file and its copies
+                        File.Delete(pakFilePath);
+                        File.Delete(sigFilePath);
+                        File.Delete(kekFilePath);
+
+                        logger.Log($"Files removed: {selectedFileName}, {Path.GetFileName(sigFilePath)}, {Path.GetFileName(kekFilePath)}");
+                        MessageBox.Show($"Files removed: {selectedFileName}, {Path.GetFileName(sigFilePath)}, {Path.GetFileName(kekFilePath)}");
+
+                        // Remove the item from the modsList and selectedFilePaths lists
+                        modsList.Items.RemoveAt(selectedIndex);
+                        selectedFilePaths.RemoveAt(selectedIndex);
+
+                        // Save the updated selected file paths back to modsList.txt
+                        SaveSelectedFilePaths();
+
+                        // Update modsList.txt by writing the updated list of file names
+                        File.WriteAllLines(modsListFilePath, selectedFilePaths);
+
+                        logger.Log("Updated modsList.txt with the removed file.");
+
+                    }
+                    catch (IOException ex)
+                    {
+                        logger.Log($"Error occurred while removing files: {ex.Message}");
+                        MessageBox.Show($"Error occurred while removing files: {ex.Message}");
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a file to uninstall.");
+            }
+        }
+
 
         private void CopyPakOrBakFile(string sourceFile, string destinationFolder)
         {
@@ -298,7 +390,7 @@ namespace DBDPakInstallerGUI2
             }
         }
 
-        private void UpdateCopies(string paksFolder, string fileName) // Updating the copies 
+        private void UpdateCopies(string paksFolder, string fileName) // Updating the copies of pakchunk348-EGS.sig
         {
             logger.Log("Updating copies of pakchunk348-EGS.sig.");
             try
@@ -436,6 +528,66 @@ namespace DBDPakInstallerGUI2
             }
         }
 
+    
+        private void LoadSelectedFilePaths()
+        {
+
+            string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            modsListFilePath = Path.Combine(appDirectory, "modsList.txt");
+
+            // Check if the modsList.txt file exists
+            if (File.Exists(modsListFilePath))
+            {
+                try
+                {
+                    // Read the file names from modsList.txt
+                    var fileNames = File.ReadAllLines(modsListFilePath);
+
+                    // Add the file names to the selectedFilePaths list
+                    selectedFilePaths.AddRange(fileNames.Except(selectedFilePaths));
+                }
+                catch (Exception ex)
+                {
+                    logger.Log($"Error occurred while loading selected file names from modsList.txt: {ex.Message}");
+                }
+            }
+
+        }
+
+        private void SaveSelectedFilePaths()
+        {
+            string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string modsListFilePath = Path.Combine(appDirectory, "modsList.txt");
+
+            if (selectedFilePaths.Count > 0)
+            {
+                try
+                {
+                    File.WriteAllLines(modsListFilePath, selectedFilePaths);
+                    logger.Log("Selected file paths saved to modsList.txt");
+                }
+                catch (Exception ex)
+                {
+                    logger.Log($"Error occurred while saving selected file paths: {ex.Message}");
+                }
+            }
+            else
+            {
+                logger.Log("No selected file paths to save.");
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                SaveSelectedFilePaths();
+            }
+            catch (Exception ex)
+            {
+                logger.Log($"Error occurred while saving selected file paths: {ex.Message}");
+            }
+        }
 
         public class Logger
         {
@@ -462,5 +614,17 @@ namespace DBDPakInstallerGUI2
             }
         }
 
+        private void modsList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (modsList.SelectedIndex != -1)
+            {
+                // Get the selected item's index
+                int selectedIndex = modsList.SelectedIndex;
+
+                // Get the corresponding file path from the selectedFilePaths list
+                string selectedFilePath = selectedFilePaths[selectedIndex];
+               
+            }
+        }
     }
 }
