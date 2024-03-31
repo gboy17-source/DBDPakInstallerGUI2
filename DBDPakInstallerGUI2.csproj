@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Screenshot_6.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -87,6 +90,7 @@
     <EmbeddedResource Include="PakBypass\PakBypass.exe" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Screenshot_6.ico" />
     <EmbeddedResource Include="PakBypass\README!!!.txt" />
     <Content Include="Resources\Screenshot_6.ico" />
   </ItemGroup>

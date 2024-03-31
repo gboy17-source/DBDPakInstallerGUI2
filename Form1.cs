@@ -149,9 +149,9 @@ namespace DBDPakInstallerGUI2
                     logger.Log($"PAK or BAK file selected: {chosenPakFileName}");
                     pakFileTextBox.Text = chosenPakFileName;
                     pakFileTextBoxDisplay.Text = chosenPakFileName; // Update display TextBox
-                    //selectedFilePaths.Clear(); // Clear the selected file paths list
+                                                                    //selectedFilePaths.Clear(); // Clear the selected file paths list
                     selectedFilePaths.AddRange(openFileDialog.FileNames); // Add the selected file paths to the list
-                    //modsList.Items.Clear(); // Clear the modsList
+                                                                          //modsList.Items.Clear(); // Clear the modsList
                     modsList.Items.AddRange(openFileDialog.FileNames.Select(Path.GetFileName).ToArray()); // Add the selected file names to the modsList
 
                     // Write the selected file names to modsList.txt
@@ -170,8 +170,27 @@ namespace DBDPakInstallerGUI2
                     // Check whether the Paks folder is valid
                     if (!string.IsNullOrEmpty(paksFolder) && Directory.Exists(paksFolder))
                     {
-                        // Create copies of pakchunk348-EGS.sig
-                        CreatePakSigCopies(paksFolder);
+                        // Determine the platform based on the selected file name
+                        bool isEpicGamesFile = chosenPakFileName.Contains("EGS");
+                        bool isSteamFile = chosenPakFileName.Contains("WindowsNoEditor");
+
+                        // Determine the base file name based on the selected file
+                        string baseFileName = isEpicGamesFile ? "pakchunk348-EGS" : "pakchunk348-WindowsNoEditor";
+
+                        // Update copies accordingly
+                        UpdateCopies(paksFolder, chosenPakFileName, baseFileName);
+
+                        // Create copies accordingly
+                        if (isEpicGamesFile)
+                        {
+                            // Create copies of both "pakchunk348-EGS.pak" 
+                            CreatePakSigCopies(paksFolder, "pakchunk348-EGS.sig");                           
+                        }
+                        else if (isSteamFile)
+                        {
+                            // Create a copy of "pakchunk348-WindowsNoEditor.pak" for Steam
+                            CreatePakSigCopies(paksFolder, "pakchunk348-WindowsNoEditor.sig");
+                        }
                     }
                     else
                     {
@@ -210,7 +229,8 @@ namespace DBDPakInstallerGUI2
                 {
                     string newFileName = chosenPakFileName.Replace("WindowsNoEditor", "EGS");
                     RenameFile(chosenPakFileName, newFileName);
-                    // Update the pakFileTextBox with the new filename
+                    UpdateModsList(newFileName); // Update the ListBox and modsList.txt
+                                                 // Update the pakFileTextBox with the new filename
                     pakFileTextBox.Text = newFileName;
                 }
                 else
@@ -231,7 +251,8 @@ namespace DBDPakInstallerGUI2
                 {
                     string newFileName = chosenPakFileName.Replace("EGS", "WindowsNoEditor");
                     RenameFile(chosenPakFileName, newFileName);
-                    // Update the pakFileTextBox with the new filename
+                    UpdateModsList(newFileName); // Update the ListBox and modsList.txt
+                                                 // Update the pakFileTextBox with the new filename
                     pakFileTextBox.Text = newFileName;
                 }
                 else
@@ -265,6 +286,43 @@ namespace DBDPakInstallerGUI2
             {
                 logger.Log($"File not found: {oldFileName}");
                 MessageBox.Show($"File not found: {oldFileName}");
+            }
+        }
+        private void UpdateModsList(string newFileName)
+        {
+            string oldFileName = Path.GetFileName(pakFileTextBox.Text);
+            string newFileNameOnly = Path.GetFileName(newFileName);
+
+            // Update ListBox
+            int indexToUpdate = modsList.Items.IndexOf(oldFileName);
+            if (indexToUpdate != -1)
+            {
+                modsList.Items[indexToUpdate] = newFileNameOnly;
+            }
+
+            // Update modsList.txt
+            try
+            {
+                string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                string modsListFilePath = Path.Combine(appDirectory, "modsList.txt");
+                if (File.Exists(modsListFilePath))
+                {
+                    string[] fileNames = File.ReadAllLines(modsListFilePath);
+                    for (int i = 0; i < fileNames.Length; i++)
+                    {
+                        // Update the file name in the modsList.txt file
+                        if (fileNames[i] == oldFileName)
+                        {
+                            fileNames[i] = newFileNameOnly;
+                            break;
+                        }
+                    }
+                    File.WriteAllLines(modsListFilePath, fileNames);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error occurred while updating modsList.txt: {ex.Message}");
             }
         }
 
@@ -323,9 +381,8 @@ namespace DBDPakInstallerGUI2
                 // Get the selected item's index
                 int selectedIndex = modsList.SelectedIndex;
 
-                // Get the corresponding file path from the selectedFilePaths list
-                string selectedFilePath = selectedFilePaths[selectedIndex];
-                string selectedFileName = Path.GetFileName(selectedFilePath);
+                // Get the corresponding file name from the modsList
+                string selectedFileName = modsList.Items[selectedIndex].ToString();
 
                 // Remove the selected file from the Paks folder
                 string pakFilePath = Path.Combine(paksFolderPath, selectedFileName);
@@ -353,12 +410,6 @@ namespace DBDPakInstallerGUI2
 
                         // Save the updated selected file paths back to modsList.txt
                         SaveSelectedFilePaths();
-
-                        // Update modsList.txt by writing the updated list of file names
-                        File.WriteAllLines(modsListFilePath, selectedFilePaths);
-
-                        logger.Log("Updated modsList.txt with the removed file.");
-
                     }
                     catch (IOException ex)
                     {
@@ -390,27 +441,32 @@ namespace DBDPakInstallerGUI2
             }
         }
 
-        private void UpdateCopies(string paksFolder, string fileName) // Updating the copies of pakchunk348-EGS.sig
+        private void UpdateCopies(string paksFolder, string fileName, string baseFileName) // Updating the copies of pakchunk348-EGS.sig
         {
-            logger.Log("Updating copies of pakchunk348-EGS.sig.");
+            logger.Log($"Updating copies of {baseFileName}.sig.");
             try
             {
-                File.WriteAllText(Path.Combine(paksFolder, "pakchunk348-EGS - Copy.sig"), Path.GetFileNameWithoutExtension(fileName));
-                File.WriteAllText(Path.Combine(paksFolder, "pakchunk348-EGS - Copy (2).sig"), Path.GetFileNameWithoutExtension(fileName));
+                // Update the copies based on the base file name
+                File.WriteAllText(Path.Combine(paksFolder, $"{baseFileName} - Copy.sig"), Path.GetFileNameWithoutExtension(fileName));
+                File.WriteAllText(Path.Combine(paksFolder, $"{baseFileName} - Copy (2).sig"), Path.GetFileNameWithoutExtension(fileName));
                 logger.Log("Copies updated successfully.");
             }
             catch (IOException ex)
             {
-                logger.Log($"Error occurred while updating copies of pakchunk348-EGS.sig: {ex.Message}");
-                MessageBox.Show($"Error occurred while updating copies of pakchunk348-EGS.sig: {ex.Message}");
+                logger.Log($"Error occurred while updating copies of {baseFileName}.sig: {ex.Message}");
+                MessageBox.Show($"Error occurred while updating copies of {baseFileName}.sig: {ex.Message}");
             }
         }
 
         private void RenameCopies(string paksFolder, string fileName)
         {
             logger.Log("Renaming copies.");
-            string renamedFile1 = Path.Combine(paksFolder, "pakchunk348-EGS - Copy.sig");
-            string renamedFile2 = Path.Combine(paksFolder, "pakchunk348-EGS - Copy (2).sig");
+
+            // Determine the base file name based on the selected file
+            string baseFileName = fileName.Contains("EGS") ? "pakchunk348-EGS" : "pakchunk348-WindowsNoEditor";
+
+            string renamedFile1 = Path.Combine(paksFolder, $"{baseFileName} - Copy.sig");
+            string renamedFile2 = Path.Combine(paksFolder, $"{baseFileName} - Copy (2).sig");
 
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
             string newName1 = Path.Combine(paksFolder, $"{fileNameWithoutExtension}.sig");
@@ -418,6 +474,7 @@ namespace DBDPakInstallerGUI2
 
             try
             {
+                // Rename copies based on the platform
                 File.Move(renamedFile1, newName1);
                 File.Move(renamedFile2, newName2);
                 logger.Log("Files renamed successfully.");
@@ -429,18 +486,18 @@ namespace DBDPakInstallerGUI2
             }
         }
 
-        private void CreatePakSigCopies(string paksFolder)
+        private void CreatePakSigCopies(string paksFolder, string baseFileName)
         {
-            string pakSigFile = Path.Combine(paksFolder, "pakchunk348-EGS.sig");
+            string pakSigFile = Path.Combine(paksFolder, $"{baseFileName}.sig");
 
             if (File.Exists(pakSigFile))
             {
-                // Make copies of the "pakchunk348-EGS.sig" file
+                // Make copies of the "pakchunk348-EGS.sig" or "pakchunk348-WindowsNoEditor.sig" file
                 try
                 {
-                    logger.Log("Creating copies of pakchunk348-EGS.sig.");
-                    File.Copy(pakSigFile, Path.Combine(paksFolder, "pakchunk348-EGS - Copy.sig"), true);
-                    File.Copy(pakSigFile, Path.Combine(paksFolder, "pakchunk348-EGS - Copy (2).sig"), true);
+                    logger.Log($"Creating copies of {baseFileName}.sig.");
+                    File.Copy(pakSigFile, Path.Combine(paksFolder, $"{baseFileName} - Copy.sig"), true);
+                    File.Copy(pakSigFile, Path.Combine(paksFolder, $"{baseFileName} - Copy (2).sig"), true);
                     logger.Log("Copies created successfully.");
                 }
                 catch (IOException ex)
@@ -448,12 +505,7 @@ namespace DBDPakInstallerGUI2
                     logger.Log($"Error occurred while copying files: {ex.Message}");
                     MessageBox.Show($"Error occurred while copying files: {ex.Message}");
                 }
-            }
-            else
-            {
-                logger.Log("pakchunk348-EGS.sig not found.");
-                MessageBox.Show("pakchunk348-EGS.sig is not found. Please select the Paks folder again.");
-            }
+            }           
         }
 
         private string ExtractPakBypassExecutable()
