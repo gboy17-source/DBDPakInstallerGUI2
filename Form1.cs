@@ -34,6 +34,7 @@ namespace DBDPakInstallerGUI2
             paksTextBox = new TextBox();
             pakFileTextBox = new TextBox();
 
+
             //display TextBoxes
             paksTextBoxDisplay = new TextBox();
             paksTextBoxDisplay.ReadOnly = true;
@@ -52,14 +53,31 @@ namespace DBDPakInstallerGUI2
             paksFolderPath = Path.Combine(appDirectory, "PaksFolderPath.txt");
             // set the modlist path to modList.txt in the app directory
             modsListFilePath = Path.Combine(appDirectory, "modsList.txt");
+            // Load the initial mod name from the text file                 
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            LoadSelectedFilePaths();
-
-            //modsList.Items.Clear();
+            LoadSelectedFilePaths();         
             modsList.Items.AddRange(selectedFilePaths.Select(Path.GetFileName).ToArray());
+            // Load the previously saved mod name from the modName.txt file
+            string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string modNameFilePath = Path.Combine(appDirectory, "modName.txt");
+
+            if (File.Exists(modNameFilePath))
+            {
+                string modName = File.ReadAllText(modNameFilePath);
+                this.modName.Text = modName;
+            }
+        }        
+
+        private void modName_TextChanged(object sender, EventArgs e)
+        {
+            string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string modNameFilePath = Path.Combine(appDirectory, "modName.txt");
+
+            // Save the current text from the modName TextBox to the modName.txt file
+            File.WriteAllText(modNameFilePath, modName.Text);
         }
 
         private void selectPaksFolder_Click(object sender, EventArgs e)
@@ -210,7 +228,8 @@ namespace DBDPakInstallerGUI2
                 {
                     string newFileName = chosenPakFileName.Replace("WindowsNoEditor", "EGS");
                     RenameFile(chosenPakFileName, newFileName);
-                    // Update the pakFileTextBox with the new filename
+                    UpdateModsList(newFileName); // Update the ListBox and modsList.txt
+                                                 // Update the pakFileTextBox with the new filename
                     pakFileTextBox.Text = newFileName;
                 }
                 else
@@ -231,7 +250,8 @@ namespace DBDPakInstallerGUI2
                 {
                     string newFileName = chosenPakFileName.Replace("EGS", "WindowsNoEditor");
                     RenameFile(chosenPakFileName, newFileName);
-                    // Update the pakFileTextBox with the new filename
+                    UpdateModsList(newFileName); // Update the ListBox and modsList.txt
+                                                 // Update the pakFileTextBox with the new filename
                     pakFileTextBox.Text = newFileName;
                 }
                 else
@@ -265,6 +285,43 @@ namespace DBDPakInstallerGUI2
             {
                 logger.Log($"File not found: {oldFileName}");
                 MessageBox.Show($"File not found: {oldFileName}");
+            }
+        }
+        private void UpdateModsList(string newFileName)
+        {
+            string oldFileName = Path.GetFileName(pakFileTextBox.Text);
+            string newFileNameOnly = Path.GetFileName(newFileName);
+
+            // Update ListBox
+            int indexToUpdate = modsList.Items.IndexOf(oldFileName);
+            if (indexToUpdate != -1)
+            {
+                modsList.Items[indexToUpdate] = newFileNameOnly;
+            }
+
+            // Update modsList.txt
+            try
+            {
+                string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                string modsListFilePath = Path.Combine(appDirectory, "modsList.txt");
+                if (File.Exists(modsListFilePath))
+                {
+                    string[] fileNames = File.ReadAllLines(modsListFilePath);
+                    for (int i = 0; i < fileNames.Length; i++)
+                    {
+                        // Update the file name in the modsList.txt file
+                        if (fileNames[i] == oldFileName)
+                        {
+                            fileNames[i] = newFileNameOnly;
+                            break;
+                        }
+                    }
+                    File.WriteAllLines(modsListFilePath, fileNames);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error occurred while updating modsList.txt: {ex.Message}");
             }
         }
 

@@ -37,6 +37,9 @@
             this.PakBypass = new System.Windows.Forms.Button();
             this.Uninstall = new System.Windows.Forms.Button();
             this.modsList = new System.Windows.Forms.ListBox();
+            this.modName = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // selectPaksFolder
@@ -163,18 +166,61 @@
             this.modsList.ForeColor = System.Drawing.Color.PowderBlue;
             this.modsList.FormattingEnabled = true;
             this.modsList.ItemHeight = 25;
-            this.modsList.Location = new System.Drawing.Point(811, 32);
+            this.modsList.Location = new System.Drawing.Point(599, 55);
             this.modsList.Name = "modsList";
-            this.modsList.Size = new System.Drawing.Size(269, 504);
+            this.modsList.Size = new System.Drawing.Size(235, 504);
             this.modsList.TabIndex = 8;
             this.modsList.SelectedIndexChanged += new System.EventHandler(this.modsList_SelectedIndexChanged);
+            // 
+            // modName
+            // 
+            this.modName.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.modName.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F);
+            this.modName.ForeColor = System.Drawing.Color.PowderBlue;
+            this.modName.Location = new System.Drawing.Point(852, 55);
+            this.modName.Multiline = true;
+            this.modName.Name = "modName";
+            this.modName.Size = new System.Drawing.Size(228, 504);
+            this.modName.TabIndex = 9;
+            this.modName.WordWrap = false;
+            this.modName.TextChanged += new System.EventHandler(this.modName_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F);
+            this.label1.ForeColor = System.Drawing.Color.PowderBlue;
+            this.label1.Location = new System.Drawing.Point(672, 25);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(100, 27);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Mods list";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.75F);
+            this.label2.ForeColor = System.Drawing.Color.PowderBlue;
+            this.label2.Location = new System.Drawing.Point(868, 25);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(196, 27);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Name your mod here";
             // 
             // dbdPakInstaller
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.DarkSlateGray;
             this.BackgroundImage = global::DBDPakInstallerGUI2.Properties.Resources.wwww;
             this.ClientSize = new System.Drawing.Size(1104, 740);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.modName);
             this.Controls.Add(this.modsList);
             this.Controls.Add(this.Uninstall);
             this.Controls.Add(this.PakBypass);
@@ -204,6 +250,9 @@
         private System.Windows.Forms.Button PakBypass;
         private System.Windows.Forms.Button Uninstall;
         private System.Windows.Forms.ListBox modsList;
+        private System.Windows.Forms.TextBox modName;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }
 
