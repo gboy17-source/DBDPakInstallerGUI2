@@ -90,6 +90,7 @@
     <EmbeddedResource Include="PakBypass\PakBypass.exe" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Screenshot_6.ico" />
     <EmbeddedResource Include="PakBypass\README!!!.txt" />
   </ItemGroup>
   <ItemGroup>
