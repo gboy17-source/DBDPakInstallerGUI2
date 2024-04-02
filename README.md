@@ -8,7 +8,7 @@ ___
 Make sure you have a click the Pak bypass button before you install mods otherwise it won't work. You can download mods here https://www.nirvanacheats.com/ just go to 'Mods' to find the mods you like. Also turn off you're antivirus if it doesn't work as it's probably being flagged as malicious but it's just false positives # TURN OFF ANTI-VIRUS
 
 # HOW TO USE
-![image](https://github.com/gboy17-source/DBDPakInstallerGUI2/assets/75770900/923ac792-fa65-4d15-9b81-02ab09610ee0)
+![image](https://github.com/gboy17-source/DBDPakInstallerGUI2/assets/75770900/5c45b537-fce3-410f-8565-7b3826ad2697)
 
 1. Download the program in the 'Releases'.
 
@@ -23,8 +23,10 @@ Make sure you have a click the Pak bypass button before you install mods otherwi
 
 6. Execute - installs the mod you selected to the Paks folder
 
-7. Pak Bypass - This is the program that make the mods/
+7. Pak Bypass - This is the program that make the mods work
 
-8. Uninstall - select the mod you want to install in the mods list box
+8. Uninstall - select the mod you want to uninstall in the mods list box
+
+9. You can now name your mod in the text box below 'Name your mod here'. make sure the name is aligned with the appropriate mod to avoid confusion.
 
 # I'll be updating this program soon when I have time so feel free to comment! :)
