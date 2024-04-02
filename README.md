@@ -5,7 +5,7 @@ ___
 
 # IMPORTANT
 
-Make sure you have a click the Pak bypass button before you install mods otherwise it won't work. You can download mods here https://www.nirvanacheats.com/ just go to 'Mods' to find the mods you like. Also turn off you're antivirus if it doesn't work as it's probably being flagged as malicious but it's just false positives # TURN OFF ANTI-VIRUS
+Make sure you have a click the Pak bypass button before you install mods otherwise it won't work. You can download mods here https://www.nirvanacheats.com/ and https://mercury.cranchpalace.info/mods Also turn off you're antivirus if it doesn't work as it's probably being flagged as malicious but it's just false positives # TURN OFF ANTI-VIRUS
 
 # HOW TO USE
 ![image](https://github.com/gboy17-source/DBDPakInstallerGUI2/assets/75770900/5c45b537-fce3-410f-8565-7b3826ad2697)
