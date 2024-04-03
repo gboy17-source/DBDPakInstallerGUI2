@@ -30,7 +30,7 @@ namespace DBDPakInstallerGUI2
             InitializeComponent();
 
             LoadSelectedFilePaths();
-            //Textbox field instances
+            //Textbox field instancess
             paksTextBox = new TextBox();
             pakFileTextBox = new TextBox();
 
