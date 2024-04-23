@@ -1,3 +1,6 @@
+#READ!!! 7.7.0 UPDATE
+#The much awaited 7.7.0 update, which will include major changes, will soon be released. Among them is the switch from UE4 to UE5, which is the game engine used by Dead by Daylight. So, no mods made prior to the switch will work. It also means that the Pak Bypass is not currently working at this time. 
+---
 # Gboy's DBD Pak Installer 
 Unfortunately, something unforeseen happened to my pc and I lost the original version in my local drive so I uploaded the updated one in a new Repository.
 # This is a new and improved Pak installer with added Pak bypass. 
